@@ -1,0 +1,8 @@
+PORT=8000
+
+mongodbURL=idd de mongo
+
+PVKEY=password para el jwtoken
+
+GOOGLE_CLIENT_ID: id del  google signin 
+GOOGLE_SECRET: clave del gogole signin 

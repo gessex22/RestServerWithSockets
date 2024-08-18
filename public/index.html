@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Not found</title>
+</head>
+<body>
+
+    <h1>GOOGLE SING IN </h1>
+    
+     
+     
+    <div id="g_id_onload"
+        data-client_id="68277234622-5f134mrnnql17st0ggn4jbnur90ouqc2.apps.googleusercontent.com"
+        data-auto_prompt="false"
+        data-callback="handleCredentialResponse">
+    </div>
+
+    <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-shape="rectangular"
+        data-logo_alignment="left">
+    </div>
+
+<button id="googleSignOut">
+signout
+</button>
+
+    <script src="https://accounts.google.com/gsi/client" async></script>
+
+<script>
+  function handleCredentialResponse(response) {
+     // decodeJwtResponse() is a custom function defined by you
+     // to decode the credential response.
+    const bodyT = {id_token : response.credential}
+    console.log(`id token: `, response.credential)        
+
+    fetch('http://localhost:8000/api/auth/google',{
+        method : 'POST',
+        headers : {
+            'Content-Type': "application/json"
+        },
+        body : JSON.stringify(bodyT)
+    })
+        .then(resp => resp.json())
+        .then(resp=> {
+            console.log(resp)
+            localStorage.setItem('email', resp.usuario.email )
+        })
+        
+            .catch(console.warn)
+
+}
+
+const button = document.getElementById('googleSignOut')
+
+button.onclick = () => {
+     google.accounts.id.disableAutoSelect()
+     google.accounts.id.revoke (localStorage.getItem('email'), done =>{
+        localStorage.clear();
+        location.reload();
+
+     })
+
+}
+
+</script>
+</body>
+</html>
