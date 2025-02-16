@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const { dbconection } = require('../db/configdb')
 const fileUpload = require('express-fileupload')
-const { socketController } = require('../../sockets/controller')
+const { socketController } = require('../sockets/controller')
 const dotenv = require('dotenv').config()
 
 
@@ -56,7 +56,7 @@ class Server{
 
     sockets(){
 
-        this.io.on('connection', socketController)
+        this.io.on('connection', (socket ) =>  socketController(socket, this.io))
     }
     
     

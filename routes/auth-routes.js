@@ -3,12 +3,12 @@ const { userDel } = require('../controllers/userController')
 const { check } = require('express-validator')
 
 const { isUser } = require('../helpers/dbValidators')
-const { authPost, authGoogle } = require('../controllers/authController')
+const { renovarToken, authPost, authGoogle } = require('../controllers/authController')
 const {validarJWT, validateFields, tieneRoles,} = require('../middleware')
 
 const router = Router()
 
-// router.get('/', userGet)
+router.get('/', validarJWT, renovarToken )
 
 
 router.post('/login', [ 

@@ -30,6 +30,7 @@ const authPost = async (req, res = response) => {
     if (!user) {
       return res.status(400).json({
         msg: "Usuario no encontrado e00021",
+        ok:false
       });
     }
 
@@ -59,6 +60,7 @@ const authPost = async (req, res = response) => {
     console.log(error);
     return res.status(500).json({
       msg: "call to the admin",
+      ok:false
     });
   }
 };
@@ -86,6 +88,7 @@ const authGoogle = async (req, res = response) => {
     if (!usuario.status) {
       return res.status(401).json({
         msg: "Hable con el adminsitrador usuario bloqueado",
+        ok:false
       });
     }
 
@@ -99,11 +102,29 @@ const authGoogle = async (req, res = response) => {
     console.log(error);
     res.status(400).json({
       msg: "el token google no es valido",
+      ok:false
     });
   }
 };
 
+
+const renovarToken = async(req,res = response )=> {
+
+const { user } = req;
+
+const token = await genJWT(user.id);
+
+res.json ({
+user,
+token
+}) 
+
+
+} 
+
+
 module.exports = {
   authPost,
   authGoogle,
+  renovarToken
 };
