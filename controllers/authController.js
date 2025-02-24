@@ -1,7 +1,7 @@
 const { response, request, json } = require("express");
 const bcrypt = require("bcryptjs");
 
-const User = require("../models/user.js");
+const { User } = require("../models");
 const { validationResult } = require("express-validator");
 const { genJWT } = require("../helpers/genJWT.js");
 const { googleVerify } = require("../helpers/googleVerify.js");
@@ -57,7 +57,6 @@ const authPost = async (req, res = response) => {
       token,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       msg: "call to the admin",
       ok:false
@@ -71,9 +70,9 @@ const authGoogle = async (req, res = response) => {
   try {
     const { name, picture, email } = await googleVerify(id_token);
 
-    let usuario = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
-    if (!usuario) {
+    if (!user) {
       const data = {
         name,
         email,
@@ -85,17 +84,17 @@ const authGoogle = async (req, res = response) => {
       await usuario.save();
     }
 
-    if (!usuario.status) {
+    if (!user.status) {
       return res.status(401).json({
         msg: "Hable con el adminsitrador usuario bloqueado",
         ok:false
       });
     }
 
-    const token = await genJWT(usuario.id);
+    const token = await genJWT(user.id);
 
     res.json({
-      usuario,
+      user,
       token,
     });
   } catch (error) {

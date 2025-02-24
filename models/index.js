@@ -7,13 +7,13 @@ const Category = require('./category')
 const ChatMessage = require('./chatMessage')
 const Role = require('./role')
 const Server = require('./server')
-const Usuario = require('./user')
+const User = require('./user')
 const Product = require('./product')
 
 
 module.exports = {
 
-    Category, Role, Server, Usuario, Product, ChatMessage
+    Category, Role, Server, User, Product, ChatMessage
 }
 
 

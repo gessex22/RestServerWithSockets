@@ -2,11 +2,11 @@ const url = window.location.hostname.includes("localhost")
   ? "http://localhost:8000/api/auth"
   : "http:urldelservidor/gesse/";
 
-const socket = io();
 let user = null;
-let sockets = null;
 
-const textUid = document.getElementById("#textUid");
+let socket = null;
+
+const textUid = document.querySelector("#textUid");
 const textMessage = document.querySelector("#textMessage");
 const ulUsers = document.querySelector("#ulUsers");
 const ulMessage = document.querySelector("#ulMessage");
@@ -31,7 +31,7 @@ const validateJWTStorage = async () => {
 };
 
 const conectSocket = async () => {
-  const socket = io({
+  socket = io({
     extraHeaders: { "x-token": localStorage.getItem("token") },
   });
 
@@ -43,16 +43,32 @@ const conectSocket = async () => {
     console.log("Conexion lost with server jaja ");
   });
 
-  socket.on("recive-message", () => {});
+  socket.on("recive-message", printMessage );
 
   socket.on("active-users", printUsers);
 
-  socket.on("private-message", () => {});
+  socket.on("private-message", printMessage);
+};
+
+const printMessage = (message = []) => {
+  let messagesHTML = "";
+
+
+  message.forEach(({ name, message }) => {
+  messagesHTML += `
+    <li> 
+        <p>
+          <span class= 'text-primary'> ${name}  </span >
+          <span> ${message}  </span>
+    `;
+  });
+
+  ulMessage.innerHTML =messagesHTML;
 };
 
 const printUsers = (users = []) => {
   let usertsHTML = "";
-  console.log(users)
+  console.log(users);
 
   users.forEach(({ name, uid }) => {
     usertsHTML += `
@@ -63,9 +79,48 @@ const printUsers = (users = []) => {
     `;
   });
 
-
-    ulUsers.innerHTML = usertsHTML
+  ulUsers.innerHTML = usertsHTML;
 };
+
+
+
+
+textMessage.addEventListener("keyup", ({ keyCode }) => {
+  const message = textMessage.value;
+  const uid = textUid.value;
+
+  if (keyCode !== 13) {
+    return;
+  }
+  if (message.length === 0) {
+    return;
+  }
+
+  socket.emit("recibir-mensaje", { uid, message });
+
+  textMessage.value = "";
+});
+
+
+
+
+
+btnExit.addEventListener('click', ()=> {
+
+    localStorage.removeItem('token');
+    window.location = 'index.html';
+
+    
+    google.accounts.id.revoke(localStorage.getItem("email"), (done) => {
+    localStorage.clear();
+    window.location = 'index.html';
+    
+  });
+       
+});
+
+
+
 
 const main = async () => {
   await validateJWTStorage();

@@ -13,7 +13,8 @@ class ChatMessage {
   }
 
   get lastTen() {
-    return this.message.splice(0, 10);
+   this.message = this.message.splice(0, 10);
+   return this.message
   }
 
   get arrUsers() {
@@ -29,10 +30,9 @@ class ChatMessage {
   }
 
   disconnectUser(id) {
-  console.log(this.arrUsers.length)
-    console.log (delete this.users[id]) ;
-      console.log(this.arrUsers.length)
-      console.log('fin del metodo')
+ 
+    delete this.users[id]
+     
   }
 }
 

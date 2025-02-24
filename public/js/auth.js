@@ -43,8 +43,10 @@ function handleCredentialResponse(response) {
     body: JSON.stringify(bodyT),
   })
     .then((resp) => resp.json())
-    .hen((resp) => {
-      localStorage.setItem("email", resp.usuario.email);
+    .then((resp) => {
+    console.log(resp)
+      localStorage.setItem("email", resp.user.email)
+      localStorage.setItem("token", resp.token)
       window.location = "chat.html";
     })
 

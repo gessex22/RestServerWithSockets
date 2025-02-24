@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const {Usuario } = require('../models')
+const { User } = require('../models')
 
 
 const genJWT = (uid = "") => {
@@ -32,15 +32,17 @@ try {
   }
 const {uid}  = jwt.verify( token, process.env.PVKEY)
 
-const user = await Usuario.findById( uid)
+const user = await User.findById( uid)
 
   if (user){
     return user
     }else{
+    console.log('posiblementte error en el token')
     return null
     }
 
 } catch (error) {
+console.log(error)
   return null
 }
 }
